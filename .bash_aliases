@@ -39,7 +39,7 @@ function frmv() {
     for file in "$@"; do
         # Check if the file exists
         if [ -f "$file" ]; then
-            rm -f "$file"
+            rm -rf "$file"
             _GREEN_ECHO "File '$file' removed"
         else
             _ORANGE_ECHO "File '$file' does not exist"

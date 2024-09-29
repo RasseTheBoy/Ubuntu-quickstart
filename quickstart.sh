@@ -41,7 +41,13 @@ ni \
     curl \
     nano \
     wget \
-    git \
+    git
+
+echo "Install Python 3"
+ni \
+    python3 \
+    python3-pip \
+    python3-venv
 
 # ---------------------------------------
 
