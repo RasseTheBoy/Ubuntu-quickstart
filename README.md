@@ -10,7 +10,6 @@ This `quickstart.sh` file installs all the basic software you would need for Ubu
 ![>24.04](https://img.shields.io/badge/%3E24.04-not%20tested-red)
 ![GitHub License](https://img.shields.io/github/license/RasseTheBoy/Ubuntu-quickstart)
 
-
 ## Table of Contents
 
 - [Ubuntu-quickstart](#ubuntu-quickstart)
