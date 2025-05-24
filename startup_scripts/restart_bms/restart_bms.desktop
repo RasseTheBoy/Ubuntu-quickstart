@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Restart Blur My Shell
+Comment=Restart the blur-my-shell script after user login
+Exec=/usr/local/bin/restart_bms.sh
+X-GNOME-Autostart-enabled=true
+OnlyShowIn=GNOME;

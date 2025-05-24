@@ -1,0 +1,14 @@
+[Unit]
+Description=Restart Blur My Shell on user login and resume
+After=graphical-session.target suspend.target hibernate.target
+
+
+[Service]
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/local/bin/restart_bms.sh
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=%h/.Xauthority
+RestartSec=5
+
+[Install]
+WantedBy=default.target graphical-session.target suspend.target hibernate.target

@@ -1,25 +1,48 @@
 #!/bin/bash
 
 # Nala Install
-ni () {
+upd_ni () {
     sudo nala update
-    sudo nala install -y $@
+    sudo nala install -y "$@"
+}
+
+# Echo bold and green
+function _TITLE_ECHO() {
+    echo -e "\033[1;32m$1\033[0m"
 }
 
 # ---------------------------------------
 
-echo "Update and upgrade"
+_TITLE_ECHO "Update and upgrade"
 sudo apt update && sudo apt upgrade -y
 
 # ---------------------------------------
 
-echo "Nala"
+_TITLE_ECHO "Nala"
 sudo apt install nala
 sudo nala fetch
 
 # ---------------------------------------
 
-echo "Add repositories"
+# Check if a file named `.bash_aliases` exists in the current directory
+if [ -f .bash_aliases ]; then
+    # Copy the file to the home directory
+    cp .bash_aliases ~/.bash_aliases
+    _TITLE_ECHO "Copied .bash_aliases to the home directory"
+fi
+
+# ---------------------------------------
+
+# Check if a directory with the name `.macros` exists
+if [ -d .macros ]; then
+    # Copy the directory to the home directory
+    cp -r .macros ~/.macros
+    _TITLE_ECHO "Copied .macros to the home directory"
+fi
+
+# ---------------------------------------
+
+_TITLE_ECHO "Add repositories"
 sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
 sudo add-apt-repository multiverse # Required by: Steam
 
@@ -27,12 +50,13 @@ sudo nala update && sudo nala upgrade -y
 
 # ---------------------------------------
 
-echo "Install necessary packages"
-ni \
+_TITLE_ECHO "Necessary packages"
+upd_ni \
     gnome-shell-extension-manager \
     ca-certificates \
     openssh-server \
     gnome-tweaks \
+    shellcheck \
     fastfetch \
     ifconfig\
     flatpak \
@@ -43,15 +67,16 @@ ni \
     wget \
     git
 
-echo "Install Python 3"
-ni \
+_TITLE_ECHO "Python 3"
+upd_ni  \
     python3 \
     python3-pip \
-    python3-venv
+    python3-venv \
+    python3-dev
 
 # ---------------------------------------
 
-echo "Set background"
+_TITLE_ECHO "Setting background"
 sudo wget -O /usr/share/backgrounds/black.png https://htmlcolorcodes.com/assets/images/colors/black-color-solid-background-1920x1080.png
 gsettings set org.gnome.desktop.background picture-uri file:////usr/share/backgrounds/black.png
 gsettings set org.gnome.desktop.background picture-uri-dark file:////usr/share/backgrounds/black.png
@@ -63,50 +88,39 @@ gsettings set org.gnome.desktop.background picture-uri-dark file:////usr/share/b
 
 # ---------------------------------------
 
-echo "Brave (beta)"
+_TITLE_ECHO "Brave (beta)"
 sudo curl -fsSLo /usr/share/keyrings/brave-browser-beta-archive-keyring.gpg https://brave-browser-apt-beta.s3.brave.com/brave-browser-beta-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/brave-browser-beta-archive-keyring.gpg] https://brave-browser-apt-beta.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-beta.list
-ni brave-browser-beta
-
-echo "Remove Firefox"
-sudo apt remove -y firefox
+upd_ni brave-browser-beta
 
 # ---------------------------------------
 
-echo "AppImages to Downloads"
+_TITLE_ECHO "AppImages to Downloads"
 wget -O ~/Downloads/beeper.AppImage https://download.beeper.com/linux/appImage/x64
 wget -O ~/Downloads/bitwarden.AppImage "https://vault.bitwarden.com/download/?app=desktop&platform=linux"
 
 # ---------------------------------------
 
-echo "Spotify"
+_TITLE_ECHO "Spotify"
 curl -sS https://download.spotify.com/debian/pubkey_6224F9941A8AA6D1.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
 echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
-ni spotify-client
-
-echo "Spicetfiy"
-source ~/.bashrc
-sudo chmod a+wr /usr/share/spotify
-sudo chmod a+wr /usr/share/spotify/Apps -R
-curl -fsSL https://raw.githubusercontent.com/spicetify/cli/main/install.sh | sh
-spicetify backup apply
-rm ./install.log
+upd_ni spotify-client
 
 # ---------------------------------------
 
-echo "Lutris"
-curl -LO $(curl -s -L https://api.github.com/repos/lutris/lutris/releases/latest | jq -r '.assets[] | select(.name | endswith(".deb")) .browser_download_url')
+_TITLE_ECHO "Lutris"
+curl -LO "$(curl -s -L https://api.github.com/repos/lutris/lutris/releases/latest | jq -r '.assets[] | select(.name | endswith(".deb")) .browser_download_url')"
 sudo nala install -y ./lutris*.deb
 rm ./lutris*.deb
 
 # ---------------------------------------
 
-echo "VS Code"
+_TITLE_ECHO "VS Code"
 wget -O vscode.deb https://update.code.visualstudio.com/latest/linux-deb-x64/stable
 sudo nala install -y ./vscode.deb
 rm ./vscode.deb
 
-echo "VS Code extensions"
+_TITLE_ECHO "VS Code extensions"
 for extension in \
     ms-vscode-remote.remote-containers\
     DavidAnson.vscode-markdownlint \
@@ -115,6 +129,7 @@ for extension in \
     yzhang.markdown-all-in-one \
     bmalehorn.shell-syntax \
     Gruntfuggly.todo-tree \
+    timonwong.shellcheck \
     ms-python.python \
     GitHub.copilot \
     Nur.just-black \
@@ -123,12 +138,12 @@ do code --install-extension $extension; done
 
 # ---------------------------------------
 
-echo "Snap packages"
+_TITLE_ECHO "Snap packages"
 
 # Snap Install
 si () {
-    for pacakge in $@; do
-        sudo snap install $pacakge
+    for pacakge in "$@"; do
+        sudo snap install "$pacakge"
     done
 }
 
@@ -137,45 +152,46 @@ si mailspring
 
 # ---------------------------------------
 
-echo "Flathub"
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+_TITLE_ECHO "Flathub"
+upd_ni gnome-software-plugin-flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo # Flathub
 flatpak install flathub org.gimp.GIMP # GIMP
+flatpak install flathub com.github.tchx84.Flatseal
 
 # ---------------------------------------
 
-echo "Steam"
-sudo dpkg --add-architecture i386
-ni steam-installer
-steam
-
-# ---------------------------------------
-
-echo "DisplayLink"
+_TITLE_ECHO "DisplayLink Driver"
 wget -O displaylink.deb https://www.synaptics.com/sites/default/files/Ubuntu/pool/stable/main/all/synaptics-repository-keyring.deb
 sudo nala install -y ./displaylink.deb
-ni displaylink-driver
+upd_ni displaylink-driver
 rm ./displaylink.deb
 
 # ---------------------------------------
 
-echo "Docker"
+_TITLE_ECHO "Docker"
 # Add Docker's official GPG key:
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
 
 # Add the repository to Apt sources:
+# shellcheck disable=SC1091
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 #Install Docker:
-ni docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+upd_ni \
+    docker-ce  \
+    docker-ce-cli  \
+    containerd.io  \
+    docker-buildx-plugin  \
+    docker-compose-plugin
 
 # Add your user to the docker group:
 sudo groupadd docker
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 newgrp docker
 
 # ---------------------------------------
@@ -184,4 +200,11 @@ sudo nala autoremove
 
 # ---------------------------------------
 
-echo "For everything to work properly, you need to restart your computer!"
+_TITLE_ECHO "Steam"
+sudo dpkg --add-architecture i386
+upd_ni steam-installer
+steam
+
+# ---------------------------------------
+
+_TITLE_ECHO "For everything to work properly, you need to restart your computer!"

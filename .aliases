@@ -1,3 +1,5 @@
+#!/bin/bash
+
 function _GREEN_ECHO() {
     echo -e "\033[0;32m$1\033[0m"
 }
@@ -11,11 +13,13 @@ function _ORANGE_ECHO() {
 }
 
 
-alias xx='exit'
-alias ealias='code ~/.bash_aliases && _GREEN_ECHO "Opening code with .bash_aliases file"'
 alias sb='source ~/.bashrc && _GREEN_ECHO "Bashrc sourced!"'
-alias sn='shutdown now'
-alias rn='shutdown -r now'
+alias sz='source ~/.zshrc && exec zsh && _GREEN_ECHO "Zshrc sourced!"'
+alias xx='exit'
+
+alias sn='shutdown now' # Shutdown
+alias rn='shutdown -r now' # Restart
+alias su='systemctl suspend' # Suspend
 
 alias upd='sudo nala update'
 alias upg='sudo nala upgrade'
@@ -26,8 +30,29 @@ alias niy='sudo nala install -y'
 alias nr='sudo nala remove'
 alias nry='sudo nala remove -y'
 
+alias pi='pip3 install'
+alias pu='pip3 uninstall'
+alias pif='pip3 install FastDebugger'
 
-# Force remove
+alias run_cargo_watch="cargo watch -q -c -w src/ -x 'run -q'"
+
+alias list_device_ips='sudo arp-scan --interface=wlp1s0 --localnet'
+alias lgrep='la | grep'
+alias ff='fastfetch'
+
+
+function ealias() {
+    # Check if the `.aliases` file exists
+    if [ -f ~/.aliases ]; then
+        code ~/.aliases
+        _GREEN_ECHO "Editing .aliases file with VSCode"
+    else
+        _RED_ECHO "The .aliases file does not exist"
+    fi
+}
+
+
+# Force remove files or directories
 function frmv() {
     # Check input variable is not empty
     if [ -z "$1" ]; then

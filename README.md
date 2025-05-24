@@ -22,6 +22,7 @@ This `quickstart.sh` file installs all the basic software you would need for Ubu
     - [Step 4: Wait](#step-4-wait)
       - [Optional](#optional)
     - [Step 5: Done](#step-5-done)
+  - [TODO](#todo)
 
 ## One-liner command
 
@@ -81,3 +82,37 @@ rm quickstart.sh
 ### Step 5: Done
 
 You're done! You now have all the basic software you need installed on your machine.
+
+## TODO
+
+- [ ] Fix indstallation
+  - [ ] Brave
+  - [ ] Spotify
+  - [ ] fastfetch
+- [ ] Add software
+  - [ ] Flatpak
+  - [ ] GNOME Tweaks
+  - [ ] dconf-editor
+  - [ ] appimage launcher
+  - [ ] Vesktop
+  - [ ] libreoffice
+  - [ ] kdenlive
+  - [ ] photogimp
+  - [ ] colorpicker
+  - [ ] winetricks
+  - [ ] btop
+  - [ ] extension manager
+  - [ ] qbittorrent
+  - [ ] syncthing
+  - [ ] ente auth
+  - [ ] (piper)
+  - [ ] tutamail
+  - [ ] eza <https://eza.rocks/>
+- [ ] Download appimage files
+- [ ] Function that moves the `.bash_aliases` file into the home directory
+- [ ] Separate files for each software
+- [ ] Install zsh and oh-my-zsh
+  - [ ] Install theme: powerlevel10k
+  - [ ] Install plugins: zsh-autosuggestions, zsh-syntax-highlighting, you-should-use
+    - substring-search <https://github.com/zsh-users/zsh-history-substring-search>
+    - venv-autoswitch <https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv>
